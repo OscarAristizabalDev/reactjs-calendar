@@ -1,8 +1,11 @@
+import { BrowserRouter } from "react-router-dom"
+import { AppRouter } from "./router"
 
 export const CalendarApp = () => {
     return (
-        <>
-            <h1> Prueba </h1>
-        </>
+        // BrowserRouter es requerido para el manejo de rutas
+        <BrowserRouter> 
+            <AppRouter />
+        </BrowserRouter>
     )
 }
