@@ -2,7 +2,7 @@ import { Calendar, EventPropGetter } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { addHours } from 'date-fns';
-import { Navbar } from '../';
+import { CalendarEvent, Navbar } from '../';
 import { localizer, getMessagesES } from '../../helpers';
 
 
@@ -19,7 +19,7 @@ const eventos = [{
 }]
 
 const eventStyleGetter = () => {
-    
+
     const style = {
         backgroundColor: '#347CF7',
         borderRadius: '0px',
@@ -40,12 +40,16 @@ export const CalendarPage = () => {
             <Calendar
                 culture='es' // permite cambiar a espaniol
                 localizer={localizer}
-                //events={eventos}
+                events={eventos}
                 startAccessor="start"
                 endAccessor="end"
                 style={{ height: 'calc(100 vh - 80px)' }}
                 messages={getMessagesES()} // permite cambiar a espaniol
                 eventPropGetter={eventStyleGetter}
+                // permite modificar un componente para su respectiva personalizacion
+                components={{
+                    event: CalendarEvent
+                }}
             />
         </>
     )
