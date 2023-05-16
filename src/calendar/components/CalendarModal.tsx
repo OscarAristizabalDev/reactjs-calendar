@@ -1,8 +1,13 @@
 import { ChangeEvent, useState } from 'react';
 
 import Modal from 'react-modal';
-import DatePicker from "react-datepicker";
+import DatePicker, { registerLocale } from "react-datepicker";
+import es from 'date-fns/locale/es';
+
 import "react-datepicker/dist/react-datepicker.css";
+
+registerLocale('es', es)
+
 
 import { addHours } from 'date-fns';
 
@@ -86,6 +91,9 @@ export const CalendarModal = () => {
                         className='form-control'
                         name="start"
                         dateFormat='Pp' // habilita la hora y minutos
+                        showTimeSelect // habilita la barra para cambiar la hora
+                        locale="es" // cambia a espanol
+                        timeCaption='Hora'
                     />
                 </div>
 
@@ -98,6 +106,9 @@ export const CalendarModal = () => {
                         name="end"
                         dateFormat='Pp' // habilita la hora y minutos
                         minDate={formValues.start} // no permite seleccionar una fecha menor a la inicial
+                        showTimeSelect // habilita la barra para cambiar la hora
+                        locale="es" // cambia a espanol
+                        timeCaption='Hora'
                     />
                 </div>
 
