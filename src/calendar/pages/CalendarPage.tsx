@@ -3,7 +3,7 @@ import { Calendar, View } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import { addHours } from 'date-fns';
-import { CalendarEvent, Navbar } from '../';
+import { CalendarEvent, CalendarModal, Navbar } from '../';
 import { localizer, getMessagesES } from '../../helpers';
 import { EventCalendar } from '../interfaces/interfaces';
 
@@ -77,6 +77,7 @@ export const CalendarPage = () => {
                 onSelectEvent={onSelect} // evento que sirve cuando solo se da un click en el evento registrado en el calendario
                 onView={onViewChanged} // evento que sirve cuando cambia entre Mes, semana, día y agenda
             />
+            <CalendarModal />
         </>
     )
 }
