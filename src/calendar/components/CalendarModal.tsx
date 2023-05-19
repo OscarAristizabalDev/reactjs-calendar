@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 import Modal from 'react-modal';
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -9,7 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 registerLocale('es', es)
 
 
-import { addHours } from 'date-fns';
+import { addHours, differenceInSeconds } from 'date-fns';
 
 const customStyles = {
     content: {
@@ -70,6 +70,24 @@ export const CalendarModal = () => {
         })
     }
 
+    const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+        // previene que el formulario se recargue
+        event.preventDefault();
+
+        const differenceSeconds = differenceInSeconds(formValues.end, formValues.start);
+
+        // Si no es numero o diferenca de segundos entre las fechas es menor igual a 0
+        if (isNaN(differenceSeconds) || differenceSeconds <= 0) {
+            return;
+        }
+
+        if (formValues.title.length <= 0) {
+            return;
+        }
+
+        console.log(formValues)
+    }
+
     return (
         <Modal
             isOpen={isOpen}
@@ -81,11 +99,11 @@ export const CalendarModal = () => {
         >
             <h1> Nuevo evento </h1>
             <hr />
-            <form className="container">
+            <form className="container" onSubmit={onSubmit}>
 
                 <div className="form-group mb-2">
                     <label>Fecha y hora inicio</label>
-                    <DatePicker 
+                    <DatePicker
                         selected={formValues.start}
                         onChange={(event: Date) => onDateChanged(event, 'start')}
                         className='form-control'
@@ -99,7 +117,7 @@ export const CalendarModal = () => {
 
                 <div className="form-group mb-2">
                     <label>Fecha y hora fin</label>
-                    <DatePicker 
+                    <DatePicker
                         selected={formValues.end}
                         onChange={(event: Date) => onDateChanged(event, 'end')}
                         className='form-control'
