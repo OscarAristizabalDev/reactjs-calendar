@@ -13,6 +13,7 @@ registerLocale('es', es)
 
 
 import { addHours, differenceInSeconds } from 'date-fns';
+import { useUiStore } from '../../hooks';
 
 const customStyles = {
     content: {
@@ -29,7 +30,9 @@ Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
 
-    const [isOpen, setIsOpen] = useState(true);
+    // Se obtiene variable desde el custom hook useUiStore
+    const { isDateModalOpen, closeDateModal } = useUiStore();
+
     const [formSubmitted, setformSubmitted] = useState(false);
 
     const [formValues, setformValues] = useState({
@@ -66,7 +69,8 @@ export const CalendarModal = () => {
     }
 
     const onCloseModal = () => {
-        setIsOpen(false);
+        //setIsOpen(false);
+        closeDateModal();
     }
 
     /**
@@ -103,7 +107,7 @@ export const CalendarModal = () => {
 
     return (
         <Modal
-            isOpen={isOpen}
+            isOpen={isDateModalOpen}
             onRequestClose={onCloseModal}
             style={customStyles}
             className="modal"
