@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
@@ -13,7 +13,8 @@ registerLocale('es', es)
 
 
 import { addHours, differenceInSeconds } from 'date-fns';
-import { useUiStore } from '../../hooks';
+import { useCalendarStore, useUiStore } from '../../hooks';
+import { EventCalendar } from '..';
 
 const customStyles = {
     content: {
@@ -33,21 +34,42 @@ export const CalendarModal = () => {
     // Se obtiene variable desde el custom hook useUiStore
     const { isDateModalOpen, closeDateModal } = useUiStore();
 
+    const { activeEvent } = useCalendarStore();
+
     const [formSubmitted, setformSubmitted] = useState(false);
 
-    const [formValues, setformValues] = useState({
-        title: 'Oscar',
-        notes: 'Aristizabal',
+    const [formValues, setformValues] = useState<EventCalendar>({
+        title: '',
+        notas: '',
         start: new Date(),
-        end: addHours(new Date(), 2)
+        end: addHours(new Date(), 2),
+        bgColor: "",
+        user: {
+            _id: "",
+            name: ""
+        }
+
     });
 
+    // el useMemo permiter memorizar valores, los cuales solo cambian cuando hayan ciertos cambios
     const titleClass = useMemo(() => {
         if (!formSubmitted) return '';
-        return (formValues.title.length > 0 )
+        return (formValues.title.length > 0)
             ? ''
             : 'is-invalid'
     }, [formValues.title, formSubmitted]) // Si vuelve a memorizar el valor si alguno de los dos valores cambian
+
+
+    // Permite ejecutar efectos, en este caso cuando cambie el activeEvent
+    useEffect(() => {
+        if(activeEvent !== null){
+            setformValues({
+                ...activeEvent // los tres puntos (...) indica que se toman tomas los atributos del objeto y se pasa uno nuevo
+            })
+        }
+
+    }, [activeEvent])
+
 
     const onInputChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
 
@@ -168,7 +190,7 @@ export const CalendarModal = () => {
                         placeholder="Notas"
                         rows={5}
                         name="notes"
-                        value={formValues.notes}
+                        value={formValues.notas}
                         onChange={onTextAreaChange}
                     ></textarea>
                     <small id="emailHelp" className="form-text text-muted">Información adicional</small>

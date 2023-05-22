@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
-import { RootState, onGetEvents, useAppDispatch } from "../store"
+import { RootState, onSetActiveEvent, useAppDispatch } from "../store"
+import { EventCalendar } from "../calendar/interfaces/interfaces";
 
 export const useCalendarStore = () => {
 
@@ -9,11 +10,16 @@ export const useCalendarStore = () => {
     // el hook useSelector de react-redux permite leer datos del store
     const { events, activeEvent } = useSelector((state: RootState) => state.calendar);
 
+    const setActiveEvent = (calendarEvent: EventCalendar) => {
+        dispatch(onSetActiveEvent(calendarEvent))
+    }
+
     return {
         // Properties
         activeEvent,
-        events
+        events,
         // Methods
+        setActiveEvent
     }
 
 }
