@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { RootState, onAddNewEvent, onSetActiveEvent, useAppDispatch } from "../store"
+import { RootState, onAddNewEvent, onSetActiveEvent, onUpdateEvent, useAppDispatch } from "../store"
 import { EventCalendar } from "../calendar/interfaces/interfaces";
 
 export const useCalendarStore = () => {
@@ -19,8 +19,11 @@ export const useCalendarStore = () => {
 
         if (calendarEvent._id) {
             // Actualizando
+            // al utilizar los tres puntos (...) se garantiza que se envíe un nuevo objeto
+            dispatch(onUpdateEvent({ ...calendarEvent }));
         } else {
             // Creando
+            /// al utilizar los tres puntos (...) se garantiza que se envíe un nuevo objeto
             dispatch(onAddNewEvent({ ...calendarEvent, _id: new Date().getTime() }));
         }
     }
