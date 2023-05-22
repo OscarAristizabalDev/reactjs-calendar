@@ -6,20 +6,7 @@ import { addHours } from 'date-fns';
 import { CalendarEvent, CalendarModal, Navbar } from '../';
 import { localizer, getMessagesES } from '../../helpers';
 import { EventCalendar } from '../interfaces/interfaces';
-import { useUiStore } from '../../hooks';
-
-
-const eventos = [{
-    title: 'Cumpleanios del Jefe',
-    notas: 'prueba',
-    start: new Date(),
-    end: addHours(new Date(), 2),
-    bgColor: '#fafafa',
-    user: {
-        _id: '123',
-        name: 'Oscar'
-    }
-}]
+import { useCalendarStore, useUiStore } from '../../hooks';
 
 
 
@@ -30,6 +17,8 @@ export const CalendarPage = () => {
     // mediante el hook useState puedo obtener y modificar en el localStorage el valor de lastView, en caso de no tener
     // valor, por defecto se deja en week
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
+
+    const { events } = useCalendarStore();
 
     const eventStyleGetter = () => {
 
@@ -65,7 +54,7 @@ export const CalendarPage = () => {
             <Calendar
                 culture='es' // permite cambiar a espaniol
                 localizer={localizer}
-                events={eventos}
+                events={events}
                 defaultView={lastView}
                 startAccessor="start"
                 endAccessor="end"
