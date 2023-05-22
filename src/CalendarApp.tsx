@@ -7,7 +7,7 @@ export const CalendarApp = () => {
     return (
         // Provee el store a toso los componentes hijos
         <Provider store={store}>
-            // BrowserRouter es requerido para el manejo de rutas
+            {/* // BrowserRouter es requerido para el manejo de rutas */}
             <BrowserRouter>
                 <AppRouter />
             </BrowserRouter>
