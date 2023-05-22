@@ -1,4 +1,5 @@
 export type EventCalendar = {
+    _id: number,
     bgColor: string,
     end: Date,
     notas: string,
@@ -12,17 +13,3 @@ export type UserEventCalendar = {
     name: string
 }
 
-export interface Events {
-    _id: number,
-    title: string,
-    notas: string,
-    start: Date,
-    end: Date,
-    bgColor: string,
-    user: UserEvent
-}
-
-interface UserEvent {
-    _id: string,
-    name: string
-}

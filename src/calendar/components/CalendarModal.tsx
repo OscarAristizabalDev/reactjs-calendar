@@ -34,13 +34,14 @@ export const CalendarModal = () => {
     // Se obtiene variable desde el custom hook useUiStore
     const { isDateModalOpen, closeDateModal } = useUiStore();
 
-    const { activeEvent } = useCalendarStore();
+    const { activeEvent, startSavingEvent } = useCalendarStore();
 
     const [formSubmitted, setformSubmitted] = useState(false);
 
     const [formValues, setformValues] = useState<EventCalendar>({
-        title: '',
-        notas: '',
+        _id: 0,
+        title: "",
+        notas: "",
         start: new Date(),
         end: addHours(new Date(), 2),
         bgColor: "",
@@ -62,10 +63,8 @@ export const CalendarModal = () => {
 
     // Permite ejecutar efectos, en este caso cuando cambie el activeEvent
     useEffect(() => {
-        if(activeEvent !== null){
-            setformValues({
-                ...activeEvent // los tres puntos (...) indica que se toman tomas los atributos del objeto y se pasa uno nuevo
-            })
+        if (activeEvent !== null) {
+            setformValues(activeEvent)
         }
 
     }, [activeEvent])
@@ -107,7 +106,7 @@ export const CalendarModal = () => {
         })
     }
 
-    const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
         // previene que el formulario se recargue
         event.preventDefault();
         setformSubmitted(true);
@@ -124,7 +123,10 @@ export const CalendarModal = () => {
             return;
         }
 
-        console.log(formValues)
+        // Add new event
+        await startSavingEvent(formValues);
+        closeDateModal();
+        setformSubmitted(false);
     }
 
     return (
@@ -189,7 +191,7 @@ export const CalendarModal = () => {
                         className="form-control"
                         placeholder="Notas"
                         rows={5}
-                        name="notes"
+                        name="notas"
                         value={formValues.notas}
                         onChange={onTextAreaChange}
                     ></textarea>
