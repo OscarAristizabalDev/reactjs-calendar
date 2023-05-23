@@ -7,7 +7,10 @@ export const store = configureStore({
     reducer: {
         calendar: calendarSlice.reducer,
         ui: uiSlice.reducer
-    }
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: false // debo leer sobre los middleware
+    })
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
