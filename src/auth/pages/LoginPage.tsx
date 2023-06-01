@@ -1,7 +1,8 @@
-import { FormEvent } from 'react';
+import { FormEvent, useEffect } from 'react';
 import { useAuthStore, useForm } from '../../hooks';
 import './LoginPage.css';
 import { User } from '..';
+import Swal from 'sweetalert2';
 
 const loginFormFields = {
     loginEmail: '',
@@ -17,10 +18,17 @@ const registerFormFields = {
 
 export const LoginPage = () => {
 
-    const { startLogin } = useAuthStore();
+    const { startLogin, errorMessage } = useAuthStore();
 
     const { loginEmail, loginPassword, onCambiarInput: onLoginInputChange }: any = useForm(loginFormFields);
     const { registerName, registerEmail, registerPassword, registerPassword2, onCambiarInput: onRegisterInputChange }: any = useForm(registerFormFields);
+
+    useEffect(() => {
+        if (errorMessage != "") {
+            Swal.fire('Error en la autenticación', errorMessage, 'error');
+        }
+    }, [errorMessage]) // cada vez que el errorMessage cambie, se ejecuta un efecto
+
 
     const loginSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();

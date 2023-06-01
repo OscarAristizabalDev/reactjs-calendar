@@ -18,7 +18,7 @@ export const useAuthStore = () => {
         try {
 
             const { data } = await calendarApi.post('/auth', { email, password });
-            
+
             localStorage.setItem('token', data.token);
             localStorage.setItem('token-init-date', new Date().getTime().toString());
 
@@ -33,7 +33,9 @@ export const useAuthStore = () => {
 
         } catch (error) {
             dispatch(onLogout('Credenciales incorrectas'));
-            dispatch(onClearErrorMessage());
+            setTimeout(() => {
+                dispatch(onClearErrorMessage());
+            }, 10)
         }
     }
 
