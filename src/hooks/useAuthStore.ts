@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-import { RootState, useAppDispatch } from "../store";
+import { RootState, onChecking, onClearErrorMessage, onLogin, onLogout, useAppDispatch } from "../store";
 import { User } from "../auth";
 import { calendarApi } from "../api";
 
@@ -12,14 +12,28 @@ export const useAuthStore = () => {
     const { status, errorMessage, user } = useSelector((state: RootState) => state.auth);
 
     const startLogin = async ({ email, password }: User) => {
+
+        dispatch(onChecking());
+
         try {
 
-            const resp = await calendarApi.post('/auth', { email, password });
+            const { data } = await calendarApi.post('/auth', { email, password });
+            
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('token-init-date', new Date().getTime().toString());
 
-            console.log(resp);
+            let user: User = {
+                email: "",
+                name: data.name,
+                password: "",
+                uid: data.uid
+            };
+
+            dispatch(onLogin(user));
 
         } catch (error) {
-            console.log(error)
+            dispatch(onLogout('Credenciales incorrectas'));
+            dispatch(onClearErrorMessage());
         }
     }
 

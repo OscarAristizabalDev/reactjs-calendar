@@ -26,9 +26,10 @@ export const LoginPage = () => {
         event.preventDefault();
 
         let user: User = {
-            name: '',
             email: loginEmail,
-            password: loginPassword
+            name: '',
+            password: loginPassword,
+            uid: ''
         }
 
         startLogin(user);

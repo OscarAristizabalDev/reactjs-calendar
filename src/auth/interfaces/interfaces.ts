@@ -5,7 +5,8 @@ export type Auth = {
 }
 
 export type User = {
-    name: string,
     email: string,
-    password: string
+    name: string,
+    password: string,
+    uid: string
 }
