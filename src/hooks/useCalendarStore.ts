@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import { RootState, onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent, useAppDispatch } from "../store"
 import { EventCalendar } from "../calendar/interfaces/interfaces";
+import { calendarApi } from "../api";
 
 export const useCalendarStore = () => {
 
@@ -9,6 +10,8 @@ export const useCalendarStore = () => {
 
     // el hook useSelector de react-redux permite leer datos del store
     const { events, activeEvent } = useSelector((state: RootState) => state.calendar);
+    // el hook useSelector de react-redux permite leer datos del store
+    const { user } = useSelector((state: RootState) => state.auth);
 
     const setActiveEvent = (calendarEvent: EventCalendar) => {
         dispatch(onSetActiveEvent(calendarEvent))
@@ -17,14 +20,24 @@ export const useCalendarStore = () => {
     const startSavingEvent = async (calendarEvent: EventCalendar) => {
         // LLegar al backend
 
-        if (calendarEvent._id) {
+        if (calendarEvent.id) {
             // Actualizando
             // al utilizar los tres puntos (...) se garantiza que se envíe un nuevo objeto
             dispatch(onUpdateEvent({ ...calendarEvent }));
         } else {
             // Creando
+
+            let event = {
+                'title': calendarEvent.title,
+                'notas': calendarEvent.notas,
+                'start': calendarEvent.start,
+                'end': calendarEvent.end
+            }            
+
+            const { data } = await calendarApi.post('/events/create', event)
+            
             /// al utilizar los tres puntos (...) se garantiza que se envíe un nuevo objeto
-            dispatch(onAddNewEvent({ ...calendarEvent, _id: new Date().getTime() }));
+            dispatch(onAddNewEvent({ ...calendarEvent, id: data.evento.id, user }));
         }
     }
 
@@ -38,7 +51,7 @@ export const useCalendarStore = () => {
         // Properties
         activeEvent,
         events,
-        hasEventSelected: !!activeEvent._id , // si activeEvent es null entonces regresa falso, de lo contrario true
+        hasEventSelected: !!activeEvent.id, // si activeEvent es null entonces regresa falso, de lo contrario true
         // Methods
         setActiveEvent,
         startSavingEvent,

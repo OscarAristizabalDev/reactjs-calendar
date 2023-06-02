@@ -1,5 +1,5 @@
 export type EventCalendar = {
-    _id: number,
+    id: number,
     bgColor: string,
     end: Date,
     notas: string,
@@ -9,7 +9,7 @@ export type EventCalendar = {
 }
 
 export type UserEventCalendar = {
-    _id: string,
+    uid: string,
     name: string
 }
 
