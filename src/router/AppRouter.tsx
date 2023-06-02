@@ -13,9 +13,9 @@ export const AppRouter = () => {
     useEffect(() => {
         checkAuthToken();
     }, []) // cada que cargue la aplicación se hace el llamado de la función checkAuthToken
-    
 
-    if(status == 'checking'){
+
+    if (status == 'checking') {
         return (
             <h3>Cargando...</h3>
         )
@@ -25,11 +25,21 @@ export const AppRouter = () => {
         <Routes>
             {
                 (status == 'not-authenticated')
-                    ? <Route path="/auth/*" element={<LoginPage />} />
-                    : <Route path="/*" element={<CalendarPage />} />
+                    ? (
+                        <>
+                            <Route path="/auth/*" element={<LoginPage />} />
+                            <Route path="/*" element={<Navigate to={"/auth/login"} />} />
+                        </>
+                    )
+                    :(
+                        <>
+                            <Route path="/" element={<CalendarPage />} />
+                            <Route path="/*" element={<Navigate to={"/"} />} />
+                        </>
+                    )
+                    
             }
 
-            <Route path="/*" element={<Navigate to={"/auth/login"} />} />
 
         </Routes>
     )
