@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { RootState, onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent, useAppDispatch } from "../store"
 import { EventCalendar } from "../calendar/interfaces/interfaces";
 import { calendarApi } from "../api";
+import { convertDateEvents } from "../helpers";
 
 export const useCalendarStore = () => {
 
@@ -32,10 +33,10 @@ export const useCalendarStore = () => {
                 'notas': calendarEvent.notas,
                 'start': calendarEvent.start,
                 'end': calendarEvent.end
-            }            
+            }
 
             const { data } = await calendarApi.post('/events/create', event)
-            
+
             /// al utilizar los tres puntos (...) se garantiza que se envíe un nuevo objeto
             dispatch(onAddNewEvent({ ...calendarEvent, id: data.evento.id, user }));
         }
@@ -47,6 +48,18 @@ export const useCalendarStore = () => {
         dispatch(onDeleteEvent());
     }
 
+    const startLoadingEvents = async () => {
+
+        try {
+            const { data } = await calendarApi.get('/events');
+            const events = convertDateEvents(data.eventos);
+
+        } catch (error) {
+            console.log('Error cargando eventos.');
+            console.log(error);
+        }
+    }
+
     return {
         // Properties
         activeEvent,
@@ -54,8 +67,9 @@ export const useCalendarStore = () => {
         hasEventSelected: !!activeEvent.id, // si activeEvent es null entonces regresa falso, de lo contrario true
         // Methods
         setActiveEvent,
-        startSavingEvent,
-        startDeletingEvent
+        startDeletingEvent,
+        startLoadingEvents,
+        startSavingEvent
     }
 
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, View } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -14,7 +14,7 @@ export const CalendarPage = () => {
     // valor, por defecto se deja en week
     const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week');
 
-    const { events, setActiveEvent } = useCalendarStore();
+    const { events, setActiveEvent, startLoadingEvents } = useCalendarStore();
 
     const eventStyleGetter = () => {
 
@@ -42,6 +42,11 @@ export const CalendarPage = () => {
         localStorage.setItem('lastView', event)
         setLastView(event)
     }
+
+    useEffect(() => {
+        startLoadingEvents();
+    }, []) // apenas se cargue el componente se hace el llamado de startLoadingEvents
+
 
     return (
         <>
