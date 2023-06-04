@@ -3,6 +3,7 @@ import { RootState, onAddNewEvent, onDeleteEvent, onLoadEvents, onSetActiveEvent
 import { EventCalendar } from "../calendar/interfaces/interfaces";
 import { calendarApi } from "../api";
 import { convertDateEvents } from "../helpers";
+import Swal from "sweetalert2";
 
 export const useCalendarStore = () => {
 
@@ -21,13 +22,22 @@ export const useCalendarStore = () => {
     const startSavingEvent = async (calendarEvent: EventCalendar) => {
         // LLegar al backend
 
-        if (calendarEvent.id) {
-            // Actualizando
-            // al utilizar los tres puntos (...) se garantiza que se envíe un nuevo objeto
-            dispatch(onUpdateEvent({ ...calendarEvent }));
-        } else {
-            // Creando
+        try {
+            if (calendarEvent.id) {
+                // Actualizando
+                let event = {
+                    'title': calendarEvent.title,
+                    'notas': calendarEvent.notas,
+                    'start': calendarEvent.start,
+                    'end': calendarEvent.end
+                }
 
+                await calendarApi.put('events/update/' + calendarEvent.id, event)
+                // al utilizar los tres puntos (...) se garantiza que se envíe un nuevo objeto
+                dispatch(onUpdateEvent({ ...calendarEvent, user }));
+                return;
+            }
+            // Creando
             let event = {
                 'title': calendarEvent.title,
                 'notas': calendarEvent.notas,
@@ -39,7 +49,13 @@ export const useCalendarStore = () => {
 
             /// al utilizar los tres puntos (...) se garantiza que se envíe un nuevo objeto
             dispatch(onAddNewEvent({ ...calendarEvent, id: data.evento.id, user }));
+        } catch (error) {
+            console.log(error);
+            Swal.fire('Error al guardar', error.response.data.message, 'error');
         }
+
+
+
     }
 
     const startDeletingEvent = () => {
