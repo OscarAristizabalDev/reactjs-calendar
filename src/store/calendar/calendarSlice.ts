@@ -52,13 +52,25 @@ export const calendarSlice = createSlice({
             action.payload.forEach(event => {
                 // Se valida que cada uno de los eventos que se van agregar al store no existan
                 const exist = state.events.some(dbEvent => dbEvent.id === event.id)
-                if(!exist){
+                if (!exist) {
                     state.events.push(event);
                 }
             })
+        },
+        onLogoutCalendar: (state) => {
+            state.isLoadingEvents = true;
+            state.events = [];
+            state.activeEvent = {} as EventCalendar;
         }
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent, onLoadEvents } = calendarSlice.actions;
+export const {
+    onAddNewEvent,
+    onDeleteEvent,
+    onLoadEvents,
+    onLogoutCalendar,
+    onSetActiveEvent,
+    onUpdateEvent
+} = calendarSlice.actions;
