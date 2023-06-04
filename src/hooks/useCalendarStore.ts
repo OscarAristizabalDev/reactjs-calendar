@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { RootState, onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent, useAppDispatch } from "../store"
+import { RootState, onAddNewEvent, onDeleteEvent, onLoadEvents, onSetActiveEvent, onUpdateEvent, useAppDispatch } from "../store"
 import { EventCalendar } from "../calendar/interfaces/interfaces";
 import { calendarApi } from "../api";
 import { convertDateEvents } from "../helpers";
@@ -10,7 +10,7 @@ export const useCalendarStore = () => {
     const dispatch = useAppDispatch();
 
     // el hook useSelector de react-redux permite leer datos del store
-    const { events, activeEvent } = useSelector((state: RootState) => state.calendar);
+    const { events, activeEvent, } = useSelector((state: RootState) => state.calendar);
     // el hook useSelector de react-redux permite leer datos del store
     const { user } = useSelector((state: RootState) => state.auth);
 
@@ -53,6 +53,8 @@ export const useCalendarStore = () => {
         try {
             const { data } = await calendarApi.get('/events');
             const events = convertDateEvents(data.eventos);
+
+            dispatch(onLoadEvents(events));
 
         } catch (error) {
             console.log('Error cargando eventos.');

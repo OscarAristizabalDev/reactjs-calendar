@@ -6,6 +6,7 @@ import { EventCalendar } from '../../calendar';
 export const calendarSlice = createSlice({
     name: 'calendar',
     initialState: {
+        isLoadingEvents: true,
         events: [] as EventCalendar[],
         activeEvent: {
             id: 0,
@@ -45,9 +46,19 @@ export const calendarSlice = createSlice({
                 state.events = state.events.filter(event => event.id !== state.activeEvent.id);
                 state.activeEvent = {} as EventCalendar;
             }
+        },
+        onLoadEvents: (state, action: PayloadAction<EventCalendar[]>) => {
+            state.isLoadingEvents = false;
+            action.payload.forEach(event => {
+                // Se valida que cada uno de los eventos que se van agregar al store no existan
+                const exist = state.events.some(dbEvent => dbEvent.id === event.id)
+                if(!exist){
+                    state.events.push(event);
+                }
+            })
         }
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent } = calendarSlice.actions;
+export const { onSetActiveEvent, onAddNewEvent, onUpdateEvent, onDeleteEvent, onLoadEvents } = calendarSlice.actions;
